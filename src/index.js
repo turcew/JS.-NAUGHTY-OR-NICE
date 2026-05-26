@@ -1,6 +1,5 @@
 function naughtyOrNice(year) {
-  const highYear =
-    (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28;
+  const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 
   const monthNames = [
     "January",
@@ -17,38 +16,47 @@ function naughtyOrNice(year) {
     "December",
   ];
 
-  const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  const daysInMonth = [
+    31,
+    isLeapYear ? 29 : 28,
+    31,
+    30,
+    31,
+    30,
+    31,
+    31,
+    30,
+    31,
+    30,
+    31,
+  ];
 
   const yearBehavior = {};
+  let niceCount = 0;
+  let naughtyCount = 0;
 
-  for (let i = 0; i <= 11; i++) {
+  for (let i = 0; i < 12; i++) {
     const monthName = monthNames[i];
     yearBehavior[monthName] = {};
-    const days = i === 1 ? highYear : daysInMonth[i];
+    const days = daysInMonth[i];
 
-    for (let day = 1; day < days + 1; day++) {
-      yearBehavior[monthName][day] = Math.random() < 0.5 ? "Naughty" : "Nice";
-    }
-  }
+    for (let day = 1; day <= days; day++) {
+      const status = Math.random() < 0.5 ? "Naughty" : "Nice";
+      yearBehavior[monthName][day] = status;
 
-  let niceCount = 0;
-  let badCount = 0;
-
-  for (const month in yearBehavior) {
-    for (const day in yearBehavior[month]) {
-      if (yearBehavior[month][day] === "Nice") {
+      if (status === "Nice") {
         niceCount++;
-        continue;
+      } else {
+        naughtyCount++;
       }
-      badCount++;
     }
   }
 
   console.log(yearBehavior);
   console.log(`nice count: ${niceCount}`);
-  console.log(`bad conut: ${badCount}`);
+  console.log(`naughty count: ${naughtyCount}`);
 
-  return niceCount >= badCount;
+  return niceCount >= naughtyCount;
 }
 
 console.log(naughtyOrNice(2028));
